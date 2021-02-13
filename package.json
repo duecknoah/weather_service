@@ -1,0 +1,26 @@
+{
+  "name": "weather_as_a_service",
+  "version": "1.0.0",
+  "description": "A NodeJS solution to view weather data via browser or API",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint ./"
+  },
+  "keywords": [
+    "node",
+    "weather",
+    "api",
+    "service"
+  ],
+  "author": "Noah Dueck",
+  "license": "ISC",
+  "devDependencies": {
+    "eslint": "^7.20.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-plugin-import": "^2.22.1"
+  },
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
