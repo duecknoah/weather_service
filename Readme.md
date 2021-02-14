@@ -16,6 +16,11 @@ If applicable, please provide the url where we can find and interact with your r
 ### Time spent
 How much time did you spend on the assignment? Normally, this is expressed in hours.
 
+- Planning - 2Hrs
+- Setup - 1Hr
+- Implementing hourly and current api endpoints with documentation - 2 hours
+
+*Total 5 hours*
 
 ### Assumptions made
 Use this section to tell us about any assumptions that you made when creating your solution.
