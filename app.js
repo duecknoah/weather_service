@@ -68,20 +68,23 @@ function getCurrentWeather(city) {
       // We need to extract what we want from the json
       // and return the new modified JSON as the response.
       const newJSON = {
-        cod: json.cod,
+        code: json.cod,
       };
+      console.log(json);
       if (json.cod !== 200) {
         return newJSON;
       }
 
-      newJSON.cod = json.cod;
       newJSON.city = json.name;
       newJSON.description = json.weather[0].description;
       newJSON.icon = json.weather[0].icon;
       newJSON.feels_like = json.main.feels_like;
       newJSON.temp = json.main.temp;
 
-      return Promise.resolve(newJSON);
+      return newJSON;
+    })
+    .catch((err) => {
+      console.error(err);
     });
 }
 
@@ -102,8 +105,11 @@ function getHourlyWeather(city) {
       // We need to extract what we want from the json and
       // return the new modified JSON as the response.
       const newJSON = {
-        cod: json.cod,
+        code: json.cod,
       };
+
+      // If the response code isn't ok, then no other info will exist in the
+      // incoming JSON, so respond with just the error code
       if (json.cod !== '200') {
         return newJSON;
       }
@@ -116,10 +122,11 @@ function getHourlyWeather(city) {
         icon: hourlyObj.weather[0].icon,
       }));
 
-      newJSON.cod = json.cod;
       newJSON.city = json.city.name;
       newJSON.hourly = hourlyArr;
 
-      return Promise.resolve(newJSON);
+      return newJSON;
+    }).catch((err) => {
+      console.error(err);
     });
 }

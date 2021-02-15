@@ -42,8 +42,10 @@ How much time did you spend on the assignment? Normally, this is expressed in ho
 - Setup - 1 hour
 - Implementing hourly and current api endpoints with documentation - 2 hours
 - Filling out Readme - 1 hour
+- Linting - 30 minutes
+- Error handling - 30 minutes
 
-*Total 5 hours*
+*Total 7 hours*
 
 ### Assumptions made
 **Use this section to tell us about any assumptions that you made when creating your solution.**
