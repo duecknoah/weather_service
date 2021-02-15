@@ -1,28 +1,14 @@
 const express = require('express');
 const fetch = require('node-fetch');
-const fs = require('fs');
 
 const app = express();
-let CONF_DATA;
+const PORT = process.env.PORT || 80;
+const { API_KEY } = process.env;
 
-/**
- * Loads the config.json file which stores data needed to start our app
- *
- * FORMAT:
- * {
- *  'API_KEY': 'YOUR_API_KEY_HERE'
- * }
- */
-const data = fs.readFileSync('./config.json');
-
-try {
-  CONF_DATA = JSON.parse(data);
-  console.dir(CONF_DATA);
-  app.listen(CONF_DATA.LISTEN_PORT, () => console.log(`Listening on port ${CONF_DATA.LISTEN_PORT}`));
-} catch (err) {
-  console.log('There has been an error parsing the config.json file.');
-  console.log(err);
+if (API_KEY === undefined) {
+  throw Error('Please set ENV variable API_KEY to your openweathermap API key');
 }
+app.listen(PORT, () => console.log(`Listening on port ${PORT}`));
 
 app.get('/', (req, res) => {
   res.send('Hello World');
@@ -60,7 +46,7 @@ app.get('/api/weather/hourly', (req, res) => {
  * @returns {Promise} JSON info of the current weather
  */
 function getCurrentWeather(city) {
-  return fetch(`http://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${CONF_DATA.API_KEY}`)
+  return fetch(`http://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}`)
     .then((res) => res.json())
     .then((json) => {
       // the incoming json response has more data than
@@ -97,7 +83,7 @@ function getCurrentWeather(city) {
  */
 function getHourlyWeather(city) {
   const CNT_LIMIT = 3; // limits how many entries of 3 hours we recieve
-  return fetch(`http://api.openweathermap.org/data/2.5/forecast?q=${city}&cnt=${CNT_LIMIT}&appid=${CONF_DATA.API_KEY}`)
+  return fetch(`http://api.openweathermap.org/data/2.5/forecast?q=${city}&cnt=${CNT_LIMIT}&appid=${API_KEY}`)
     .then((res) => res.json())
     .then((json) => {
       // the incoming json response has more data than
