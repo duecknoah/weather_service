@@ -1,8 +1,10 @@
 const express = require('express');
 const fetch = require('node-fetch');
+const cors = require('cors'); // allows us to access data from a different domain and serve that back to the front-end.
+const path = require('path'); // for joining paths
 
 const app = express();
-const PORT = process.env.PORT || 80;
+const PORT = process.env.PORT || 5000;
 const { API_KEY } = process.env;
 
 if (API_KEY === undefined) {
@@ -10,9 +12,8 @@ if (API_KEY === undefined) {
 }
 app.listen(PORT, () => console.log(`Listening on port ${PORT}`));
 
-app.get('/', (req, res) => {
-  res.send('Hello World');
-});
+// Serve static files from the React app
+app.use(express.static(path.join(__dirname, (process.env.IS_DEV === '1') ? 'client/public' : 'client/build')));
 
 /**
  * Gets current info of the desired city, see getCurrentWeather() for JSON format
@@ -20,7 +21,7 @@ app.get('/', (req, res) => {
  * Ex:
  * yourip:port/api/weather/current?city=CITY_NAME_HERE
  */
-app.get('/api/weather/current', (req, res) => {
+app.get('/api/weather/current', cors(), (req, res) => {
   const { city } = req.query;
 
   getCurrentWeather(city).then((json) => res.send(json));
@@ -32,7 +33,7 @@ app.get('/api/weather/current', (req, res) => {
  * Ex:
  * yourip:port/api/weather/hourly?city=CITY_NAME_HERE
  */
-app.get('/api/weather/hourly', (req, res) => {
+app.get('/api/weather/hourly', cors(), (req, res) => {
   const { city } = req.query;
 
   getHourlyWeather(city).then((json) => res.send(json));
@@ -56,7 +57,6 @@ function getCurrentWeather(city) {
       const newJSON = {
         code: json.cod,
       };
-      console.log(json);
       if (json.cod !== 200) {
         return newJSON;
       }
@@ -116,3 +116,15 @@ function getHourlyWeather(city) {
       console.error(err);
     });
 }
+
+// The "catchall" handler: for any request that doesn't
+// match one above, send back React's index.html file.
+// When running a build, express will redirect anything that isn't an API endpoint
+// to the main page
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, (process.env.IS_DEV === '1') ? '/client/public/index.html' : '/client/build/index.html'));
+});
+
+app.get('*', (req, res) => {
+  res.sendStatus(404);
+});

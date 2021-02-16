@@ -24,8 +24,16 @@ On top of this I wanted to deploy this all on a platform to host. I decided to u
 Modules used and reasoning:
 - [**Express**](https://www.npmjs.com/package/express) - I could have used the basic http module and used http.createServer(...) to handle incoming requests. However Express provides an elegant and easy way - to create endpoints, plus I'm already familiar with it.
 - [**node-fetch**](https://www.npmjs.com/package/node-fetch) - Very similiar to window.fetch in Javascript in the browser, this allows me to get a Promise of a request. Needed for proxying between the user and [open weather map](https://openweathermap.org/).
+- [**cors**](https://www.npmjs.com/package/cors) - Allows us to communicate between react and our api endpoints on Express
 
 I created an account for getting weather data and found [current](https://openweathermap.org/current) and [hourly](https://openweathermap.org/forecast5) API endpoints to use. I also created a Heroku account to deploy later on.
+
+## Working Phase
+- I realized there was no simple way for Heroku to get my API key and use it from a file (my original solution). So I had to get rid of the file solution and implement an environment variables solution with an env.bat file
+- I decided to use React as the UI library, however my project was created already. Had some permissions issues involving network drives and installing the react-scripts. Found a [helpful tutorial](https://medium.com/@fredrikanderzon/adding-create-react-app-scripts-to-an-existing-project-207cfe3cd190). Unfortunately some issues still persisted so I create a new react app entirely and manually merged into this repo.
+- I couldn't wrap my head fully around how to link Express and React together. With a little bit of hair pulling I figured out running both concurrently requires having the React app in its own folder within the repo. Then setting package.json to run a postbuild script on Heroku to build React and run it as well. See [how to deploy](https://daveceddia.com/deploy-react-express-app-heroku/#:~:text=Now%20start%20up%20the%20React,the%20whole%20thing%20to%20Heroku.)
+- I get data to the front-end by having React and Express running on separate ports. Then having React make GET requests to Express's API and having that update the state of the components. Since They are running on separate ports CORS is needed.
+-
 
 ### Date
 **The date you're submitting this.**
@@ -44,16 +52,16 @@ How much time did you spend on the assignment? Normally, this is expressed in ho
 - Linting - 30 minutes
 - Error handling - 30 minutes
 - Heroku deployment and environment variable setup - 1 hour
-
-*Total 8 hours*
+- React setup and Heroku adjustments - 3 hours (some issues)
+- Weather widget w/ communication to backend api - 2 hours
 
 ### Assumptions made
 **Use this section to tell us about any assumptions that you made when creating your solution.**
-
+- Deploying with React+Express to Heroku would be simple. It proved to be the main time killer.
+- React being somewhat similiar to UI5 at SAP. Making it easier to learn.
 
 ### Shortcuts/Compromises made
 **If applicable. Did you do something that you feel could have been done better in a real-world application? Please let us know.**
-I realized there was no simple way for Heroku to get my API key and use it from a file (my original solution). So I had to get rid of the file solution and implement an environment variables solution with an env.bat file
 
 ### Stretch goals attempted
 **If applicable, use this area to tell us what stretch goals you attempted. What went well? What do you wish you
@@ -72,7 +80,13 @@ could have done better? If you didn't attempt any of the stretch goals, feel fre
 1. `npm install`
 2. Open env.bat and put in API key for openweatherorg
 3. `\env.bat`
-4. `npm start`
+4. `npm run dev`
+
+- If runninng locally, to hit API endpoints (Express):
+   - http://localhost:5000/api/...
+- To hit main page (React):
+  - http://localhost:3000/
+
 
 If running on heroku, run `heroku config:set API_KEY=YOUR_API_KEY_HERE`
 
