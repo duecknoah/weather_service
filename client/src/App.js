@@ -5,8 +5,8 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <WeatherWidget />
       </header>
+      <WeatherWidget />
     </div>
   );
 }

@@ -33,14 +33,22 @@ I created an account for getting weather data and found [current](https://openwe
 - I decided to use React as the UI library, however my project was created already. Had some permissions issues involving network drives and installing the react-scripts. Found a [helpful tutorial](https://medium.com/@fredrikanderzon/adding-create-react-app-scripts-to-an-existing-project-207cfe3cd190). Unfortunately some issues still persisted so I create a new react app entirely and manually merged into this repo.
 - I couldn't wrap my head fully around how to link Express and React together. With a little bit of hair pulling I figured out running both concurrently requires having the React app in its own folder within the repo. Then setting package.json to run a postbuild script on Heroku to build React and run it as well. See [how to deploy](https://daveceddia.com/deploy-react-express-app-heroku/#:~:text=Now%20start%20up%20the%20React,the%20whole%20thing%20to%20Heroku.)
 - I get data to the front-end by having React and Express running on separate ports. Then having React make GET requests to Express's API and having that update the state of the components. Since They are running on separate ports CORS is needed.
--
+- I do two separate fetch calls to my api for each weather widget (one for current and one for hourly weather data), this could be optimized in the future to be able to do a batch call of all of the widgets data. Due to time limitations, this is how it is for now.
+- React generates a lot of files on its own, I plan on trimming and doing cleanup as I finalize the project.
+- I realized openweatherdata's API JSON for hourly data forecast includes local time as a Date string, which is perfect so I don't need to calculate time zone conversions with the UTC time.
 
 ### Date
 **The date you're submitting this.**
 
 ### Location of deployed application
 **If applicable, please provide the url where we can find and interact with your running application.**
+[Deployed to Heroku](https://noah-weather-service.herokuapp.com/) <br />
+To access APIS (examples): <br />
+Current weather data:
+- https://noah-weather-service.herokuapp.com/api/weather/current?city=Vancouver
 
+Upcoming morning data (3 hour increments):
+- https://noah-weather-service.herokuapp.com/api/weather/hourly?city=Vancouver
 
 ### Time spent
 How much time did you spend on the assignment? Normally, this is expressed in hours.
@@ -54,6 +62,7 @@ How much time did you spend on the assignment? Normally, this is expressed in ho
 - Heroku deployment and environment variable setup - 1 hour
 - React setup and Heroku adjustments - 3 hours (some issues)
 - Weather widget w/ communication to backend api - 2 hours
+- Weather widget and design completion - 2 hours
 
 ### Assumptions made
 **Use this section to tell us about any assumptions that you made when creating your solution.**
@@ -62,6 +71,7 @@ How much time did you spend on the assignment? Normally, this is expressed in ho
 
 ### Shortcuts/Compromises made
 **If applicable. Did you do something that you feel could have been done better in a real-world application? Please let us know.**
+- I'm going to leave out the DB and login with JWT token due to time limitations. I believe squeezing it in will make the overall project lower quality, I prefer to ship on time and have it done right
 
 ### Stretch goals attempted
 **If applicable, use this area to tell us what stretch goals you attempted. What went well? What do you wish you
@@ -77,10 +87,11 @@ could have done better? If you didn't attempt any of the stretch goals, feel fre
 
 ### Instructions to run assignment locally
 **If applicable, please provide us with the necessary instructions to run your solution.**
-1. `npm install`
-2. Open env.bat and put in API key for openweatherorg
-3. `\env.bat`
-4. `npm run dev`
+1. `npm install` (installs Express dependencies)
+2. `npm run client-install` (installs React dependencies)
+3. Open env.bat and put in API key for openweatherorg
+4. `\env.bat`
+5. `npm run dev`
 
 - If runninng locally, to hit API endpoints (Express):
    - http://localhost:5000/api/...
