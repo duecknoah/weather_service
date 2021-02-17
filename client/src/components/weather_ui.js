@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import AddCityForm from './add_city_form';
 import './weather_ui.css';
-import WeatherWidgets from './weather_widgets';
+import WeatherWidget from './weather_widget';
+import fetch from 'node-fetch';
 
 /**
  * A form consisting of a text box and add button to add new weather widgets.
@@ -16,28 +17,63 @@ class WeatherUI extends Component {
     super(props);
 
     this.state = {
-      widgets: undefined,
+      widgets: []
     };
 
     this.handleAddCity = this.handleAddCity.bind(this);
+    this.addWidget = this.addWidget.bind(this);
   }
 
   // Gets raised from AddCityForm within this component when adding
   // a city/widget
-  handleAddCity(event) {
+  handleAddCity(event, value) {
     event.preventDefault();
-    console.log(event);
+     this.addWidget(value);
+  }
+
+  // Essentially append the new widget to the existing widgets in the state
+  addWidget(city) {
+    // Verify the city is valid
+    fetch(`/api/weather/validate?city=${city}`)
+    .then(res => res.json())
+    .then(json => {
+      if (json.isValid) {
+        this.setState({
+          widgets: [...this.state.widgets, {id: this.state.widgets.length, city: city}]
+        });
+      } else {
+        alert('Invalid city');
+      }
+    });
   }
 
   render() {
     return (
       <div>
-        {
-          <AddCityForm onAdd={this.handleAddCity} />
-        }
+        {this.state.widgets.map(widget => <WeatherWidget key={widget.id} city={widget.city}/>)}
+        <AddCityForm handleAddCity={this.handleAddCity} />
       </div>
     )
   }
 }
 
 export default WeatherUI;
+
+
+
+// class WeatherWidgets extends Component {
+//   state = {
+//     widgets: [
+//       {id: 0, city: 'Vancouver'},
+//       {id: 1, city: 'Tokyo'},
+//     ]
+//   };
+
+//   render() {
+//     return (
+//       <div>
+//         {this.state.widgets.map(widget => <WeatherWidget key={widget.id} city={widget.city}/>)}
+//       </div>
+//     )
+//   }
+// }

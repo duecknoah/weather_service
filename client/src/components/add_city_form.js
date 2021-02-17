@@ -16,7 +16,6 @@ class AddCityForm extends Component {
     };
 
     this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   handleChange(event) {
@@ -25,18 +24,12 @@ class AddCityForm extends Component {
     });
   }
 
-  handleSubmit(event) {
-    event.preventDefault(); // prevents refreshing page
-    console.log(event);
-    // this.props.onAddCity(event);
-  }
-
   // Submit event is raised and handled in the parent WeatherUI component, see WeatherUI for more info
   render() {
     return (
-      <form onSubmit={this.handleSubmit}>
-        <input type="text" placeholder="Vancouver" value={this.state.value} onChange={this.handleChange} />
-        <input type="submit" value="Add City" />
+      <form className="addCityForm" onSubmit={(event) => this.props.handleAddCity(event, this.state.value)}>
+        <input className="addCityInput" type="text" placeholder="Vancouver" value={this.state.value} onChange={this.handleChange} />
+        <input className="addCityButton" type="submit" value="Add City" />
       </form>
     )
   }

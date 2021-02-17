@@ -40,6 +40,8 @@ I created an account for getting weather data and found [current](https://openwe
 *Some further widget and component planning below*
 ![Weather widget plan](/images/planning4.jpg)
 ![Weather widget plan](/images/planning5.jpg)
+
+- React is very similiar to UI5 except with some syntax changes. There are components that have their own state that control what is shown on the DOM.
 ### Date
 **The date you're submitting this.**
 
@@ -53,20 +55,23 @@ Current weather data:
 Upcoming morning data (3 hour increments):
 - https://noah-weather-service.herokuapp.com/api/weather/hourly?city=Vancouver
 
+Validate city:
+- https://noah-weather-service.herokuapp.com/api/weather/validate?city=Vancouver
+
+You can hit API endpoints locally by going to http://localhost:5000
 ### Time spent
 How much time did you spend on the assignment? Normally, this is expressed in hours.
 
 - Planning - 2 hours
 - Setup - 1 hour
-- Implementing hourly and current api endpoints with documentation - 2 hours
+- Implementing api endpoints with documentation - 2.5 hours
 - Filling out Readme - 1 hour
 - Linting - 30 minutes
-- Error handling - 30 minutes
 - Heroku deployment and environment variable setup - 1 hour
 - React setup and Heroku adjustments - 3 hours (some issues)
 - Weather widget w/ communication to backend api - 2 hours
 - Weather widget and design completion - 2 hours
-- Parent and child components, event handling, adding and removing cities - 2 hours
+- Parent and child components, event handling, adding cities - 3 hours
 
 ### Assumptions made
 **Use this section to tell us about any assumptions that you made when creating your solution.**
@@ -83,20 +88,17 @@ How much time did you spend on the assignment? Normally, this is expressed in ho
 could have done better? If you didn't attempt any of the stretch goals, feel free to let us know why.**
 
 1. **Build a simple UI for the service**
-2. **Add authentication to the service**
-3. **Deploy your API**
-4. **Proxy a real weather API via your service to fetch the actual weather.**
+2. **Deploy your API**
+3. **Proxy a real weather API via your service to fetch the actual weather.**
      - I used [open weather map](https://openweathermap.org/) to fetch [current](https://openweathermap.org/current) and [hourly](https://openweathermap.org/forecast5) weather data for different cities. This worked surpringsly easily along with the node-fetch module. The membership is free and allows for what I needed in this project.
-
-
 
 ### Instructions to run assignment locally
 **If applicable, please provide us with the necessary instructions to run your solution.**
 1. `npm install` (installs Express dependencies)
 2. `npm run client-install` (installs React dependencies)
 3. Open env.bat and put in API key for openweatherorg
-4. `\env.bat`
-5. `npm run dev`
+4. `\env.bat` (run via cmd window)
+5. `npm run dev` (run via cmd window)
 
 - If runninng locally, to hit API endpoints (Express):
    - http://localhost:5000/api/...
@@ -121,3 +123,5 @@ Some ideas that didn't quite make the cut (either to complexity, no access to an
 
 ### Your feedback on this technical challenge
 **Have feedback for how we could make this assignment better? Please let us know.**
+
+Building a Full Stack solution for this problem was a lot of fun, quite the challenge! Its been very fun learning how to build an application like this from the ground up. Took me longer than expected.

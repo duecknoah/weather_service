@@ -40,6 +40,30 @@ app.get('/api/weather/hourly', cors(), (req, res) => {
 });
 
 /**
+ * Returns a boolean value if the city query string is a valid city. Returned in a JSON
+ * Object
+ * Ex:
+ * yourip:port/api/weather/validate?city=CITY_NAME_HERE
+ */
+app.get('/api/weather/validate', cors(), (req, res) => {
+  const { city } = req.query;
+
+  getCurrentWeather(city).then((json) => {
+    let isValidJSON = {
+      isValid: false,
+    };
+    console.log(json);
+    if (json.code !== 200) {
+      res.send(isValidJSON);
+    }
+    else {
+      isValidJSON.isValid = true;
+      res.send(isValidJSON);
+    }
+  });
+});
+
+/**
  * Makes an HTTP GET request to the openweathermap
  * API to get the current weather information as a JSON.
  *

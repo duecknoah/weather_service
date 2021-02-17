@@ -5,28 +5,28 @@ class WeatherWidget extends Component {
   state = {
     city: this.props.city || 'Vancouver', // default value
     current: {},
-    hourly: {}
+    hourly: {},
+    isValid: true,
   }
 
   // When component is ready, we want to fetch the current and hourly weather data
   // and update our weather widget compnent with that data.
   // This goes through our proxy to hit our Express API.
   componentDidMount() {
-    fetch(`/api/weather/current?city=${this.state.city}`)
-      .then(res => res.json())
-      .then(weatherObj => this.setState(
-        {
-          current: weatherObj,
-          hourly: this.state.hourly
-        }, () => console.log(`Current data.. ${JSON.stringify(weatherObj)}`)));
-    fetch(`/api/weather/hourly?city=${this.state.city}`)
+    const currentWeatherPromise = fetch(`/api/weather/current?city=${this.state.city}`)
     .then(res => res.json())
-    .then(weatherObj => this.setState(() => {
-      return {
-        current: this.state.current,
-        hourly: weatherObj
-      }
-    }, () => console.log(`Hourly data.. ${JSON.stringify(weatherObj)}`)));
+
+    const hourlyWeatherPromise = fetch(`/api/weather/hourly?city=${this.state.city}`)
+    .then(res => res.json());
+
+    // Wait for all of the data to come in before updating the state.
+    Promise.all([currentWeatherPromise, hourlyWeatherPromise]).then((weatherData) => {
+      this.setState({
+        current: weatherData[0],
+        hourly: weatherData[1],
+        isValid: true
+      });
+    });
   }
 
   // openweathermap has all of its icons on its website, the data fetched from the API
@@ -58,7 +58,7 @@ class WeatherWidget extends Component {
       (this.state.hourly.hourly || []).map(hourObj =>
       <li key={hourObj.dt}>
         <div className="hourly_weather_time">{this.formatTime(new Date(hourObj.dt))}</div>
-        <div className="hourly_weather_icon"><img src={this.getWeatherIconURL(hourObj.icon)} alt={hourObj.description} /></div>
+        <div className="hourly_weather_icon"><img src={hourObj.icon.undefined ? '' : this.getWeatherIconURL(hourObj.icon)} alt={hourObj.description} /></div>
         <div className="hourly_weather_temp_box">{this.formatTemp(this.state.current.temp)}</div>
       </li>)
     }</ul>

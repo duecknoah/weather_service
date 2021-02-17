@@ -1,6 +1,5 @@
 import './App.css';
-import AddCityForm from './components/add_city_form';
-import WeatherWidgets from './components/weather_widgets';
+import WeatherUI from './components/weather_ui';
 
 function App() {
   return (
@@ -8,8 +7,7 @@ function App() {
       <header className="App-header">
         <h1>Weather Service</h1>
       </header>
-      <WeatherWidgets />
-      <AddCityForm />
+      <WeatherUI />
     </div>
   );
 }
