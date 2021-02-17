@@ -12,6 +12,7 @@ class WeatherWidget extends Component {
     current: {},
     hourly: {},
     isValid: true,
+    hasLoaded: false,
   }
 
   // When component is ready, we want to fetch the current and hourly weather data
@@ -39,7 +40,8 @@ class WeatherWidget extends Component {
       this.setState({
         current: weatherData[0],
         hourly: weatherData[1],
-        isValid: true
+        isValid: true,
+        hasLoaded: true // Mark as all data loaded so we can render
       });
     });
   }
@@ -73,16 +75,16 @@ class WeatherWidget extends Component {
       (this.state.hourly.hourly || []).map(hourObj =>
       <li key={hourObj.dt}>
         <div className="hourly_weather_time">{this.formatTime(new Date(hourObj.dt))}</div>
-        <div className="hourly_weather_icon"><img src={hourObj.icon.undefined ? '' : this.getWeatherIconURL(hourObj.icon)} alt={hourObj.description} /></div>
+        <div className="hourly_weather_icon"><img src={this.getWeatherIconURL(hourObj.icon)} alt={hourObj.description} /></div>
         <div className="hourly_weather_temp_box">{this.formatTemp(this.state.current.temp)}</div>
       </li>)
     }</ul>
   }
 
   // Displays the entire weather widget, this includes current weather and hourly weather
-  // for the city
+  // for the city. Waits for data to be loaded before displaying
   render() {
-    return (
+    return this.state.hasLoaded ? (
       <div className="weather_box">
         <div className="current_weather_box">
           <div className="current_weather_city">{this.state.current.city}</div>
@@ -105,7 +107,7 @@ class WeatherWidget extends Component {
           {this.renderHourlyWeather()}
         </div>
       </div>
-    );
+    ) : <span>Loading Weather...</span>;
   };
 }
 
