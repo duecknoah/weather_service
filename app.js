@@ -82,7 +82,7 @@ function getCurrentWeather(city) {
  * @returns {Promise} JSON info of the current weather
  */
 function getHourlyWeather(city) {
-  const CNT_LIMIT = 4; // limits how many entries of 3 hours we recieve
+  const CNT_LIMIT = 3; // limits how many entries of 3 hours we recieve
   return fetch(`http://api.openweathermap.org/data/2.5/forecast?q=${city}&cnt=${CNT_LIMIT}&appid=${API_KEY}`)
     .then((res) => res.json())
     .then((json) => {
@@ -107,10 +107,6 @@ function getHourlyWeather(city) {
         description: hourlyObj.weather[0].description,
         icon: hourlyObj.weather[0].icon,
       }));
-
-      // We want to return times 6AM, 9AM, 12PM. To give the user the start of the day.
-      // We remove the 3AM index
-      hourlyArr.splice(0, 1);
 
       newJSON.city = json.city.name;
       newJSON.hourly = hourlyArr;

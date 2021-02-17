@@ -31,6 +31,7 @@ li {
   -webkit-align-items: flex-start;
   -ms-flex-align: start;
   align-items: flex-start;
+  margin: 0.25em 0;
   }
 
 .current_weather_box:nth-child(1) {

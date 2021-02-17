@@ -2,26 +2,24 @@ import React, { Component } from 'react';
 import './weather_widget.css';
 
 class WeatherWidget extends Component {
-  constructor() {
-    super();
-    this.state = {
-      current: {},
-      hourly: {}
-    }
+  state = {
+    city: this.props.city || 'Vancouver', // default value
+    current: {},
+    hourly: {}
   }
 
   // When component is ready, we want to fetch the current and hourly weather data
   // and update our weather widget compnent with that data.
   // This goes through our proxy to hit our Express API.
   componentDidMount() {
-    fetch('/api/weather/current?city=Vancouver')
+    fetch(`/api/weather/current?city=${this.state.city}`)
       .then(res => res.json())
       .then(weatherObj => this.setState(
         {
           current: weatherObj,
           hourly: this.state.hourly
         }, () => console.log(`Current data.. ${JSON.stringify(weatherObj)}`)));
-    fetch('/api/weather/hourly?city=Vancouver')
+    fetch(`/api/weather/hourly?city=${this.state.city}`)
     .then(res => res.json())
     .then(weatherObj => this.setState(() => {
       return {
@@ -42,17 +40,32 @@ class WeatherWidget extends Component {
     return `${(temp - 273.15).toFixed(0)} °C`;
   }
 
+  // converts Date to the format:
+  // H(am/pm)
+  formatTime(date) {
+    let hours = date.getHours();
+    let ampm = hours >= 12 ? 'PM' : 'AM';
+    hours %= 12;
+    hours = hours ? hours : 12; // the hour 0 should be 12
+
+    return hours + ampm;
+  }
+
+  // Renders the upcoming weather in 3 hours increments. Each display with
+  // the time, weather icon, and temperature.
   renderHourlyWeather() {
     return <ul>{
       (this.state.hourly.hourly || []).map(hourObj =>
       <li key={hourObj.dt}>
-        <div className="hourly_weather_time">{new Date(hourObj.dt).getHours()}</div>
+        <div className="hourly_weather_time">{this.formatTime(new Date(hourObj.dt))}</div>
         <div className="hourly_weather_icon"><img src={this.getWeatherIconURL(hourObj.icon)} alt={hourObj.description} /></div>
         <div className="hourly_weather_temp_box">{this.formatTemp(this.state.current.temp)}</div>
       </li>)
     }</ul>
   }
 
+  // Displays the entire weather widget, this includes current weather and hourly weather
+  // for the city
   render() {
     return (
       <div className="weather_box">
@@ -72,7 +85,7 @@ class WeatherWidget extends Component {
         </div>
         <div className="hourly_weather_box">
           <div className="hourly_weather_time_greeting">
-            Upcoming Morning
+            Upcoming (UTC)
           </div>
           {this.renderHourlyWeather()}
         </div>

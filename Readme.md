@@ -35,8 +35,11 @@ I created an account for getting weather data and found [current](https://openwe
 - I get data to the front-end by having React and Express running on separate ports. Then having React make GET requests to Express's API and having that update the state of the components. Since They are running on separate ports CORS is needed.
 - I do two separate fetch calls to my api for each weather widget (one for current and one for hourly weather data), this could be optimized in the future to be able to do a batch call of all of the widgets data. Due to time limitations, this is how it is for now.
 - React generates a lot of files on its own, I plan on trimming and doing cleanup as I finalize the project.
-- I realized openweatherdata's API JSON for hourly data forecast includes local time as a Date string, which is perfect so I don't need to calculate time zone conversions with the UTC time.
+- I realized openweatherdata's API JSON for hourly data forecast includes UTC as a Date string, as a future edition, I'd calculate the timezone and do conversion. We'll work with UTC to keep it more consistent
 
+*Some further widget and component planning below*
+![Weather widget plan](/images/planning4.jpg)
+![Weather widget plan](/images/planning5.jpg)
 ### Date
 **The date you're submitting this.**
 
@@ -63,6 +66,7 @@ How much time did you spend on the assignment? Normally, this is expressed in ho
 - React setup and Heroku adjustments - 3 hours (some issues)
 - Weather widget w/ communication to backend api - 2 hours
 - Weather widget and design completion - 2 hours
+- Parent and child components, event handling, adding and removing cities - 2 hours
 
 ### Assumptions made
 **Use this section to tell us about any assumptions that you made when creating your solution.**
@@ -72,6 +76,7 @@ How much time did you spend on the assignment? Normally, this is expressed in ho
 ### Shortcuts/Compromises made
 **If applicable. Did you do something that you feel could have been done better in a real-world application? Please let us know.**
 - I'm going to leave out the DB and login with JWT token due to time limitations. I believe squeezing it in will make the overall project lower quality, I prefer to ship on time and have it done right
+- Using UTC time instead of city specific local time for hourly forecast. This is done for consistency and simplification.
 
 ### Stretch goals attempted
 **If applicable, use this area to tell us what stretch goals you attempted. What went well? What do you wish you
