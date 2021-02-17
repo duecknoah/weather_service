@@ -2,7 +2,12 @@ import React, { Component } from 'react';
 import AddCityForm from './add_city_form';
 import './weather_ui.css';
 import WeatherWidget from './weather_widget';
-import fetch from 'node-fetch';
+import originalFetch from 'isomorphic-fetch';
+import fetch from 'fetch-retry';
+fetch = fetch(originalFetch, {
+  retries: 3,
+  retryDelay: 1000,
+});
 
 /**
  * A form consisting of a text box and add button to add new weather widgets.
@@ -33,6 +38,10 @@ class WeatherUI extends Component {
 
   // Essentially append the new widget to the existing widgets in the state
   addWidget(city) {
+    if (this.state.widgets.length >= 20) {
+      alert("Max number of weather widgets is 20!");
+      return;
+    }
     // Verify the city is valid
     fetch(`/api/weather/validate?city=${city}`)
     .then(res => res.json())
@@ -44,6 +53,11 @@ class WeatherUI extends Component {
       } else {
         alert('Invalid city');
       }
+    })
+    .catch((err) => {
+      // Fetch-retry makes it so if the request fails due to network reasons
+      // it will retry. This catch is here just in case of any operational errors
+      console.error(err);
     });
   }
 
@@ -58,22 +72,3 @@ class WeatherUI extends Component {
 }
 
 export default WeatherUI;
-
-
-
-// class WeatherWidgets extends Component {
-//   state = {
-//     widgets: [
-//       {id: 0, city: 'Vancouver'},
-//       {id: 1, city: 'Tokyo'},
-//     ]
-//   };
-
-//   render() {
-//     return (
-//       <div>
-//         {this.state.widgets.map(widget => <WeatherWidget key={widget.id} city={widget.city}/>)}
-//       </div>
-//     )
-//   }
-// }

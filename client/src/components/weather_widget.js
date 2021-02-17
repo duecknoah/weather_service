@@ -1,6 +1,11 @@
 import React, { Component } from 'react';
 import './weather_widget.css';
-
+import originalFetch from 'isomorphic-fetch';
+import fetch from 'fetch-retry';
+fetch = fetch(originalFetch, {
+  retries: 3,
+  retryDelay: 1000,
+});
 class WeatherWidget extends Component {
   state = {
     city: this.props.city || 'Vancouver', // default value
@@ -15,9 +20,19 @@ class WeatherWidget extends Component {
   componentDidMount() {
     const currentWeatherPromise = fetch(`/api/weather/current?city=${this.state.city}`)
     .then(res => res.json())
+    .catch((err) => {
+      // Fetch-retry makes it so if the request fails due to network reasons
+      // it will retry. This catch is here just in case of any operational errors
+      console.error(err);
+    });
 
     const hourlyWeatherPromise = fetch(`/api/weather/hourly?city=${this.state.city}`)
-    .then(res => res.json());
+    .then(res => res.json())
+    .catch((err) => {
+      // Fetch-retry makes it so if the request fails due to network reasons
+      // it will retry. This catch is here just in case of any operational errors
+      console.error(err);
+    });
 
     // Wait for all of the data to come in before updating the state.
     Promise.all([currentWeatherPromise, hourlyWeatherPromise]).then((weatherData) => {

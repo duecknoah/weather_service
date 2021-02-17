@@ -1,5 +1,9 @@
 const express = require('express');
-const fetch = require('node-fetch');
+const originalFetch = require('isomorphic-fetch');
+const fetch = require('fetch-retry')(originalFetch, {
+  retries: 3,
+  retryDelay: 1000,
+});
 const cors = require('cors'); // allows us to access data from a different domain and serve that back to the front-end.
 const path = require('path'); // for joining paths
 
@@ -49,14 +53,13 @@ app.get('/api/weather/validate', cors(), (req, res) => {
   const { city } = req.query;
 
   getCurrentWeather(city).then((json) => {
+    // eslint-disable-next-line prefer-const
     let isValidJSON = {
       isValid: false,
     };
-    console.log(json);
     if (json.code !== 200) {
       res.send(isValidJSON);
-    }
-    else {
+    } else {
       isValidJSON.isValid = true;
       res.send(isValidJSON);
     }
@@ -94,6 +97,8 @@ function getCurrentWeather(city) {
       return newJSON;
     })
     .catch((err) => {
+      // Fetch-retry makes it so if the request fails due to network reasons
+      // it will retry. This catch is here just in case of any operational errors
       console.error(err);
     });
 }
@@ -125,7 +130,7 @@ function getHourlyWeather(city) {
       }
 
       // For each hourly entry, extract what we need and map that into our new hourly array
-      let hourlyArr = json.list.map((hourlyObj) => ({
+      const hourlyArr = json.list.map((hourlyObj) => ({
         dt: hourlyObj.dt_txt,
         temp: hourlyObj.main.temp,
         description: hourlyObj.weather[0].description,
@@ -137,6 +142,8 @@ function getHourlyWeather(city) {
 
       return newJSON;
     }).catch((err) => {
+      // Fetch-retry makes it so if the request fails due to network reasons
+      // it will retry. This catch is here just in case of any operational errors
       console.error(err);
     });
 }
