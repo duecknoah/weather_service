@@ -1,5 +1,6 @@
 # Weather Service
 A NodeJS solution to view weather data on any location via browser or through the REST API
+![Weather service image](images/weather_service.jpg)
 
 ## Notes
 ### Planning Phase
